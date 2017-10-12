@@ -1,8 +1,5 @@
 #include <iostream> // utilizado para entradas e saidas
-
 #include <stdlib.h> // utilizado para usar o rand
-
-#include <cstring> // utilizado para usar o memset
 
 using namespace std;
 
@@ -16,7 +13,7 @@ int main() {
 
     int quanttags = initags; // quantidade atual de tags
 
-    while (quanttags <= 1000) {
+    while (quanttags <= maximotags) {
         cout << "###################   " << quanttags << "  #########################" << endl;
         int execucao = quantsimulacoes;
         int somaslots = inislots;
@@ -51,7 +48,7 @@ int main() {
             }
             quanttags=initags*epoca; // reinicia a variavel quanttags com a quantidade de tags da epoca que ela esta (10)
         }
-        cout << somaslots/2000.0 << endl; // media de slots utilizados para reconhecer as tags
+        cout << (double)somaslots/quantsimulacoes << endl; // media de slots utilizados para reconhecer as tags
         cout << "#########################################################################" << endl << endl;
         epoca++;
         quanttags+=initags;
