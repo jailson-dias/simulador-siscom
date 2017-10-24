@@ -1,14 +1,17 @@
 #include <iostream>
 
+#include "eon_lee.h"
+#include "lower_bound.h"
+
 using namespace std;
 
 int main() {
     int protocolo = 1,
         initags = 1,
-        incrementotags,
-        maxtags,
-        repeticoes,
-        inislots;
+        incrementotags = 1,
+        maxtags = 1,
+        repeticoes = 1,
+        inislots = 1;
     string protocolos[3] = {"Lower Bound", "Eom-Lee","Lower Bound e Eom-Lee"};
     do {
         if (protocolo < 1 || protocolo > 3) {
@@ -74,17 +77,45 @@ int main() {
     cout << "Quantidade de repetições do teste em cada quantidade de etiquetas: " << repeticoes << "," << endl;
     cout << "Tamanho do quadro inicial: " << inislots << "." << endl << endl << endl;
 
+/*
+initags,
+incrementotags,
+maxtags,
+repeticoes,
+inislots;
+*/
+    if(protocolo == 1) {
+        vector<vector<double> > lb = lower_bound(
+            inislots,
+            initags,
+            incrementotags,
+            maxtags,
+            repeticoes
+        );
 
-    switch(protocolo) {
-        case 1:
-            
-            break;
-        case 2:
-        
-            break;
-        case 3:
-    
-            break;
+        for(int i = 0; i < lb.size(); i++) {
+            cout << "Iteração: " << i + 1 << endl;
+            cout << "Total slots: " << lb[i][0] << endl;
+            cout << "Slots com colisão: " << lb[i][1] << endl;
+            cout << "Slots vazios: " << lb[i][2] << endl;
+        }
+    } else if(protocolo == 2) {
+        vector<vector<double> > el = eonlee(
+            inislots,
+            initags,
+            incrementotags,
+            maxtags,
+            repeticoes
+        );
+
+        for(int i = 0; i < el.size(); i++) {
+            cout << "Iteração: " << i + 1 << endl;
+            cout << "Total slots: " << el[i][0] << endl;
+            cout << "Slots com colisão: " << el[i][1] << endl;
+            cout << "Slots vazios: " << el[i][2] << endl;
+        }
+    } else if (protocolo == 3) {
+        cout << "not yet" << endl;
     }
 
     return 0;
