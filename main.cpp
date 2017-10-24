@@ -1,9 +1,12 @@
 #include <iostream>
 #include <fstream>
+#include<string>
 #include "eon_lee.h"
 #include "lower_bound.h"
 
 using namespace std;
+using std::string;
+using std::to_string;
 
 int main() {
 
@@ -85,12 +88,11 @@ maxtags,
 repeticoes,
 inislots;
 */
+    int num = 2;
     ofstream slots, slotsvazios, slotscolisao;
     slots.open ("slots.dat");
     slotsvazios.open ("slotsvazios.dat");
     slotscolisao.open ("slotscolisao.dat");
-    // slots << "Writing this to a file.\n";
-    
 
     if(protocolo == 1) {
         vector<vector<double> > lb = lower_bound(
@@ -131,6 +133,7 @@ inislots;
             tags += incrementotags;
         }
     } else if (protocolo == 3) {
+        num = 3;
         vector<vector<double> > lb = lower_bound(
             inislots,
             initags,
@@ -153,8 +156,8 @@ inislots;
         slotscolisao << "Etiquetas Lower-Bound Eon-Lee\n";
         for(int i = 0; i < el.size(); i++) {
             slots << tags << " " << lb[i][0] << " " << el[i][0] << "\n";
-            slotscolisao << tags << " " << lb[i][1] << " " << el[i][0] << "\n";
-            slotsvazios << tags << " " << lb[i][2] << " " << el[i][0] << "\n";
+            slotscolisao << tags << " " << lb[i][1] << " " << el[i][1] << "\n";
+            slotsvazios << tags << " " << lb[i][2] << " " << el[i][2] << "\n";
             tags += incrementotags;
         }
     }
@@ -162,6 +165,15 @@ inislots;
     slots.close();
     slotsvazios.close();
     slotscolisao.close();
+
+    // gerar graficos
+    string comando1 = "gnuplot -c run-gnuplot.gp slots.png slots.dat " + to_string(num);
+    string comando2 = "gnuplot -c run-gnuplot.gp slotsvazios.png slotsvazios.dat " + to_string(num);
+    string comando3 = "gnuplot -c run-gnuplot.gp slotscolisao.png slotscolisao.dat " + to_string(num);
+    
+    system(comando1.c_str());
+    system(comando2.c_str());
+    system(comando3.c_str());
 
     return 0;
 }
