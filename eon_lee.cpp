@@ -8,7 +8,6 @@
 
 using namespace std;
 
-
 double calcbk(int l, double ykm1, int sc, int ss) {
     /** funcao para calcular o beta da interacao k no algoritmo de eon-lee
         
@@ -45,7 +44,6 @@ vector<vector<double> > eonlee(int inislots, // quantidade inicial de slots
     int quanttags = initags; // quantidade atual de tags    
     vector<vector<double> > retorno;
     while (quanttags <= maximotags) {
-        // cout << "###################   " << quanttags << "  #########################" << endl;
         int execucao = quantsimulacoes;
         int somaslots = inislots;
         int slotscolisao = 0;
@@ -75,8 +73,6 @@ vector<vector<double> > eonlee(int inislots, // quantidade inicial de slots
                     }
                 }
 
-                // cout << colisao << "  slots  " << quantslots << endl;
-
                 double ykm1 = DBL_MAX, // valor do gama na interacao anterior
                     yk = iniy1, // valor atual de gama
                     bkm1 = inib1, // valor do beta na interacao anterior
@@ -86,12 +82,8 @@ vector<vector<double> > eonlee(int inislots, // quantidade inicial de slots
                         ykm1 = yk;
                         bk = calcbk(quantslots, ykm1, colisao, sucesso);
                         yk = calcyk(bk);
-                        // cout << "yk, bk, ykm1:     " << yk << " "<< bk << " "<< ykm1 << endl;
-                        // cout << "bk: " << bk << ", yk: " << yk << endl;
                     }
-                    // cout << yk << " colisao " << colisao << endl;
                     quantslots = ceil(yk * colisao); // quantidade de slots no proximo quadro (gama atual * slots com colisao)
-                    // cout << quantslots<< endl;
                 }
                 quanttags -= sucesso;
                 slotscolisao += colisao;
@@ -102,12 +94,6 @@ vector<vector<double> > eonlee(int inislots, // quantidade inicial de slots
         }
         vector<double> medias = {(double)somaslots/quantsimulacoes,(double)slotscolisao/quantsimulacoes,(double)slotsvazio/quantsimulacoes};
         retorno.push_back(medias);
-        // cout << "Interação " << epoca << endl;
-        // cout << "Total slots: " << medias[0] << endl;
-        // cout << "Slots com colisão: " << medias[1] << endl;
-        // cout << "Slots vazios: " << medias[2] << endl << endl;
-        // cout << (double)somaslots/quantsimulacoes << endl; // media de slots utilizados para reconhecer as tags
-        // cout << "#########################################################################" << endl << endl;
         epoca++;
         quanttags+=initags;
     }
