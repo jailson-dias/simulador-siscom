@@ -1,11 +1,12 @@
 #include <iostream>
-
+#include <fstream>
 #include "eon_lee.h"
 #include "lower_bound.h"
 
 using namespace std;
 
 int main() {
+
     int protocolo = 1,
         initags = 1,
         incrementotags = 1,
@@ -84,6 +85,11 @@ maxtags,
 repeticoes,
 inislots;
 */
+    ofstream myfile;
+    myfile.open ("simuladores-slots.dat");
+    // myfile << "Writing this to a file.\n";
+    
+
     if(protocolo == 1) {
         vector<vector<double> > lb = lower_bound(
             inislots,
@@ -92,12 +98,15 @@ inislots;
             maxtags,
             repeticoes
         );
-
+        int tags = initags;
+        myfile << "Etiquetas Lower-Bound\n";
         for(int i = 0; i < lb.size(); i++) {
-            cout << "Iteração: " << i + 1 << endl;
-            cout << "Total slots: " << lb[i][0] << endl;
-            cout << "Slots com colisão: " << lb[i][1] << endl;
-            cout << "Slots vazios: " << lb[i][2] << endl;
+            myfile << tags << " " << lb[i][0] << "\n";
+            tags += incrementotags;
+            // cout << "Iteração: " << i + 1 << endl;
+            // cout << "Total slots: " << lb[i][0] << endl;
+            // cout << "Slots com colisão: " << lb[i][1] << endl;
+            // cout << "Slots vazios: " << lb[i][2] << endl;
         }
     } else if(protocolo == 2) {
         vector<vector<double> > el = eonlee(
@@ -117,6 +126,8 @@ inislots;
     } else if (protocolo == 3) {
         cout << "not yet" << endl;
     }
+
+    myfile.close();
 
     return 0;
 }
