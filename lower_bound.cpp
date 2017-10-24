@@ -1,22 +1,25 @@
 #include <iostream> // utilizado para entradas e saidas
 #include <stdlib.h> // utilizado para usar o rand
+#include <vector> 
 
 using namespace std;
 
-int main() {
-    int inislots = 64, // quantidade inicial de slots
-        initags = 100, // quantidade inicial de tags
-        incrementotags = 100, // tamanho do incremento na quantidade de tags
-        maximotags = 1000, // numero maximo de tags
-        quantsimulacoes = 2000, // quantidade de simulacoes para cada quantidade de tags
-        epoca = 1; // incremento de tags (100,200, ..., 1000)
+vector<vector<double> > lower_bound(int inislots, // quantidade inicial de slots
+    int initags, // quantidade inicial de tags
+    int incrementotags, // tamanho do incremento na quantidade de tags
+    int maximotags, // numero maximo de tags
+    int quantsimulacoes // quantidade de simulacoes para cada quantidade de tags
+) {
+    int epoca = 1; // incremento de tags (100,200, ..., 1000)
 
     int quanttags = initags; // quantidade atual de tags
 
+    vector<vector<double> > retorno;
     while (quanttags <= maximotags) {
-        cout << "###################   " << quanttags << "  #########################" << endl;
         int execucao = quantsimulacoes;
         int somaslots = inislots;
+        int slotscolisao = 0;
+        int slotsvazio = 0;
         while (execucao--) {
             int quantslots = inislots; // quantidade de slots na interacao atual
             while (quanttags > 0) {
@@ -43,15 +46,30 @@ int main() {
                 }
                 quantslots = colisao<<1; // quantidade de slots no proximo quadro (colisao * 2)
                 quanttags -= sucesso;
-
+                slotscolisao += colisao;
+                slotsvazio += vazio;
                 somaslots += quantslots; // utilizado para saber a quantidade de slots sao utilizados em media para reconhecer as tags
             }
             quanttags=initags*epoca; // reinicia a variavel quanttags com a quantidade de tags da epoca que ela esta (10)
         }
-        cout << (double)somaslots/quantsimulacoes << endl; // media de slots utilizados para reconhecer as tags
-        cout << "#########################################################################" << endl << endl;
+        vector<double> medias = {(double)somaslots/quantsimulacoes,(double)slotscolisao/quantsimulacoes,(double)slotsvazio/quantsimulacoes};
+        retorno.push_back(medias);
         epoca++;
         quanttags+=initags;
     }
+
+    return retorno;
+}
+
+int main() {
+    vector<vector<double> > retorno = lower_bound(64, 100, 100, 1000, 2000);
+
+    for (int i = 0;i< retorno.size();i++) {
+        cout << "Interação " << i + 1 << endl;
+        cout << "Total slots: " << retorno[i][0] << endl;
+        cout << "Slots com colisão: " << retorno[i][1] << endl;
+        cout << "Slots vazios: " << retorno[i][2] << endl << endl;
+    }
+
     return 0;
 }
