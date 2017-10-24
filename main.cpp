@@ -85,9 +85,11 @@ maxtags,
 repeticoes,
 inislots;
 */
-    ofstream myfile;
-    myfile.open ("simuladores-slots.dat");
-    // myfile << "Writing this to a file.\n";
+    ofstream slots, slotsvazios, slotscolisao;
+    slots.open ("slots.dat");
+    slotsvazios.open ("slotsvazios.dat");
+    slotscolisao.open ("slotscolisao.dat");
+    // slots << "Writing this to a file.\n";
     
 
     if(protocolo == 1) {
@@ -98,15 +100,16 @@ inislots;
             maxtags,
             repeticoes
         );
+
         int tags = initags;
-        myfile << "Etiquetas Lower-Bound\n";
+        slots << "Etiquetas Lower-Bound\n";
+        slotsvazios << "Etiquetas Lower-Bound\n";
+        slotscolisao << "Etiquetas Lower-Bound\n";
         for(int i = 0; i < lb.size(); i++) {
-            myfile << tags << " " << lb[i][0] << "\n";
+            slots << tags << " " << lb[i][0] << "\n";
+            slotscolisao << tags << " " << lb[i][1] << "\n";
+            slotsvazios << tags << " " << lb[i][2] << "\n";
             tags += incrementotags;
-            // cout << "Iteração: " << i + 1 << endl;
-            // cout << "Total slots: " << lb[i][0] << endl;
-            // cout << "Slots com colisão: " << lb[i][1] << endl;
-            // cout << "Slots vazios: " << lb[i][2] << endl;
         }
     } else if(protocolo == 2) {
         vector<vector<double> > el = eonlee(
@@ -117,17 +120,48 @@ inislots;
             repeticoes
         );
 
+        int tags = initags;
+        slots << "Etiquetas Eon-Lee\n";
+        slotsvazios << "Etiquetas Eon-Lee\n";
+        slotscolisao << "Etiquetas Eon-Lee\n";
         for(int i = 0; i < el.size(); i++) {
-            cout << "Iteração: " << i + 1 << endl;
-            cout << "Total slots: " << el[i][0] << endl;
-            cout << "Slots com colisão: " << el[i][1] << endl;
-            cout << "Slots vazios: " << el[i][2] << endl;
+            slots << tags << " " << el[i][0] << "\n";
+            slotscolisao << tags << " " << el[i][1] << "\n";
+            slotsvazios << tags << " " << el[i][2] << "\n";
+            tags += incrementotags;
         }
     } else if (protocolo == 3) {
-        cout << "not yet" << endl;
+        vector<vector<double> > lb = lower_bound(
+            inislots,
+            initags,
+            incrementotags,
+            maxtags,
+            repeticoes
+        );
+
+        vector<vector<double> > el = eonlee(
+            inislots,
+            initags,
+            incrementotags,
+            maxtags,
+            repeticoes
+        );
+
+        int tags = initags;
+        slots << "Etiquetas Lower-Bound Eon-Lee\n";
+        slotsvazios << "Etiquetas Lower-Bound Eon-Lee\n";
+        slotscolisao << "Etiquetas Lower-Bound Eon-Lee\n";
+        for(int i = 0; i < el.size(); i++) {
+            slots << tags << " " << lb[i][0] << " " << el[i][0] << "\n";
+            slotscolisao << tags << " " << lb[i][1] << " " << el[i][0] << "\n";
+            slotsvazios << tags << " " << lb[i][2] << " " << el[i][0] << "\n";
+            tags += incrementotags;
+        }
     }
 
-    myfile.close();
+    slots.close();
+    slotsvazios.close();
+    slotscolisao.close();
 
     return 0;
 }
