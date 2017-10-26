@@ -2,7 +2,7 @@
 # especifica 'grid' no plot
 # para dois estimadores, usar: for[i=3:3]; para um estimador, usar: for[i=3:2]
 
-set terminal png
+set terminal png size 900,675
 set output ARG1
 set xlabel "Número de Etiquetas"
 set ylabel ARG3
