@@ -89,10 +89,11 @@ repeticoes,
 inislots;
 */
     int num = 2;
-    ofstream slots, slotsvazios, slotscolisao;
+    ofstream slots, slotsvazios, slotscolisao, tempo;
     slots.open ("slots.dat");
     slotsvazios.open ("slotsvazios.dat");
     slotscolisao.open ("slotscolisao.dat");
+    tempo.open("tempo.dat");
 
     if(protocolo == 1) {
         vector<vector<double> > lb = lower_bound(
@@ -107,10 +108,12 @@ inislots;
         slots << "Etiquetas Lower-Bound\n";
         slotsvazios << "Etiquetas Lower-Bound\n";
         slotscolisao << "Etiquetas Lower-Bound\n";
+        tempo << "Etiquetas Lower-Bound\n";
         for(int i = 0; i < lb.size(); i++) {
             slots << tags << " " << lb[i][0] << "\n";
             slotscolisao << tags << " " << lb[i][1] << "\n";
             slotsvazios << tags << " " << lb[i][2] << "\n";
+            tempo << tags << " " << lb[i][3] << "\n";
             tags += incrementotags;
         }
     } else if(protocolo == 2) {
@@ -126,10 +129,12 @@ inislots;
         slots << "Etiquetas Eon-Lee\n";
         slotsvazios << "Etiquetas Eon-Lee\n";
         slotscolisao << "Etiquetas Eon-Lee\n";
+        tempo << "Etiquetas Eon-Lee\n";
         for(int i = 0; i < el.size(); i++) {
             slots << tags << " " << el[i][0] << "\n";
             slotscolisao << tags << " " << el[i][1] << "\n";
             slotsvazios << tags << " " << el[i][2] << "\n";
+            tempo << tags << " " << el[i][3] << "\n";
             tags += incrementotags;
         }
     } else if (protocolo == 3) {
@@ -154,10 +159,12 @@ inislots;
         slots << "Etiquetas Lower-Bound Eon-Lee\n";
         slotsvazios << "Etiquetas Lower-Bound Eon-Lee\n";
         slotscolisao << "Etiquetas Lower-Bound Eon-Lee\n";
+        tempo << "Etiquetas Lower-Bound Eon-Lee\n";
         for(int i = 0; i < el.size(); i++) {
             slots << tags << " " << lb[i][0] << " " << el[i][0] << "\n";
             slotscolisao << tags << " " << lb[i][1] << " " << el[i][1] << "\n";
             slotsvazios << tags << " " << lb[i][2] << " " << el[i][2] << "\n";
+            tempo << tags << " " << lb[i][3] << " " << el[i][3] << "\n";
             tags += incrementotags;
         }
     }
@@ -165,15 +172,18 @@ inislots;
     slots.close();
     slotsvazios.close();
     slotscolisao.close();
+    tempo.close();
 
     // gerar graficos
     string comando1 = "gnuplot -c run-gnuplot.gp slots.png slots.dat " + to_string(num);
     string comando2 = "gnuplot -c run-gnuplot.gp slotsvazios.png slotsvazios.dat " + to_string(num);
     string comando3 = "gnuplot -c run-gnuplot.gp slotscolisao.png slotscolisao.dat " + to_string(num);
+    string comando4 = "gnuplot -c run-gnuplot.gp tempo.png tempo.dat " + to_string(num);
     
     system(comando1.c_str());
     system(comando2.c_str());
     system(comando3.c_str());
+    system(comando4.c_str());
 
     return 0;
 }

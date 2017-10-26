@@ -1,8 +1,10 @@
 #include <iostream> // utilizado para entradas e saidas
 #include <stdlib.h> // utilizado para usar o rand
-#include <vector> 
+#include <vector>
+#include <chrono> // utilizado para contar o tempo de execucao
 
 using namespace std;
+using namespace std::chrono;
 
 vector<vector<double> > lower_bound(int inislots, // quantidade inicial de slots
     int initags, // quantidade inicial de tags
@@ -15,11 +17,17 @@ vector<vector<double> > lower_bound(int inislots, // quantidade inicial de slots
     int quanttags = initags; // quantidade atual de tags
 
     vector<vector<double> > retorno;
+
+    high_resolution_clock::time_point t1, t2;
+    duration<double, std::milli> time_span;
+
     while (quanttags <= maximotags) {
         int execucao = quantsimulacoes;
         int somaslots = inislots;
         int slotscolisao = 0;
         int slotsvazio = 0;
+
+        t1 = high_resolution_clock::now();
         while (execucao--) {
             int quantslots = inislots; // quantidade de slots na interacao atual
             while (quanttags > 0) {
@@ -52,7 +60,9 @@ vector<vector<double> > lower_bound(int inislots, // quantidade inicial de slots
             }
             quanttags=initags*epoca; // reinicia a variavel quanttags com a quantidade de tags da epoca que ela esta (10)
         }
-        vector<double> medias = {(double)somaslots/quantsimulacoes,(double)slotscolisao/quantsimulacoes,(double)slotsvazio/quantsimulacoes};
+        t2 = high_resolution_clock::now();
+        time_span = t2 - t1;
+        vector<double> medias = {(double)somaslots/quantsimulacoes,(double)slotscolisao/quantsimulacoes,(double)slotsvazio/quantsimulacoes,(double)time_span.count()};
         retorno.push_back(medias);
         epoca++;
         quanttags+=initags;
@@ -68,7 +78,8 @@ int main() {
         cout << "Interação " << i + 1 << endl;
         cout << "Total slots: " << retorno[i][0] << endl;
         cout << "Slots com colisão: " << retorno[i][1] << endl;
-        cout << "Slots vazios: " << retorno[i][2] << endl << endl;
+        cout << "Slots vazios: " << retorno[i][2] << endl;
+        cout << "Tempo: " << retorno[i][3] << endl << endl;
     }
 
     return 0;
