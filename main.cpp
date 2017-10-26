@@ -175,10 +175,10 @@ inislots;
     tempo.close();
 
     // gerar graficos
-    string comando1 = "gnuplot -c run-gnuplot.gp slots.png slots.dat " + to_string(num);
-    string comando2 = "gnuplot -c run-gnuplot.gp slotsvazios.png slotsvazios.dat " + to_string(num);
-    string comando3 = "gnuplot -c run-gnuplot.gp slotscolisao.png slotscolisao.dat " + to_string(num);
-    string comando4 = "gnuplot -c run-gnuplot.gp tempo.png tempo.dat " + to_string(num);
+    string comando1 = "gnuplot -c run-gnuplot.gp slots.png slots.dat \"Número de Slots\" " + to_string(num);
+    string comando2 = "gnuplot -c run-gnuplot.gp slotsvazios.png slotsvazios.dat \"Número de Slots Vazios\" " + to_string(num);
+    string comando3 = "gnuplot -c run-gnuplot.gp slotscolisao.png slotscolisao.dat \"Número de Slots em Colisão\" " + to_string(num);
+    string comando4 = "gnuplot -c run-gnuplot.gp tempo.png tempo.dat \"Tempo de execução (ms)\" " + to_string(num);
     
     system(comando1.c_str());
     system(comando2.c_str());
