@@ -38,7 +38,7 @@ int main(int argc, char **argv)
 }
 
 /*
- * 1. Initialize F cur = F ini , F sub , N s and N c , where F ini and F sub are initial full frame and sub-frame size, respectively
+ * 1. Initialize F cur = Fini , Fsub , N s and N c , where F ini and F sub are initial full frame and sub-frame size, respectively
  * 2. while (quanttags > 0)
  * 3. for (int i = 0; i < quanttags; i++) {
         slots[rand() % quantslots] += 1; // gera um numero aleatorio entre 0 e a quantidade de slots e no slot do numero que foi gerado acrescenta um nele

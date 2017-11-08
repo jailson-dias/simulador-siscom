@@ -31,6 +31,7 @@ vector<vector<double> > lower_bound(int inislots, // quantidade inicial de slots
         while (execucao--) {
             int quantslots = inislots; // quantidade de slots na interacao atual
             while (quanttags > 0) {
+                somaslots += quantslots; // utilizado para saber a quantidade de slots sao utilizados em media para reconhecer as tags
                 int slots[quantslots],
                     sucesso = 0, // quantidade de slots que leram as etiquetas com sucesso
                     colisao = 0, // quantidade de slots que tiveram colisao
@@ -56,7 +57,6 @@ vector<vector<double> > lower_bound(int inislots, // quantidade inicial de slots
                 quanttags -= sucesso;
                 slotscolisao += colisao;
                 slotsvazio += vazio;
-                somaslots += quantslots; // utilizado para saber a quantidade de slots sao utilizados em media para reconhecer as tags
             }
             quanttags=initags*epoca; // reinicia a variavel quanttags com a quantidade de tags da epoca que ela esta (10)
         }
