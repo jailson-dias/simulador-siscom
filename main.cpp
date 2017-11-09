@@ -1,68 +1,189 @@
 #include <iostream>
-#include <stdlib.h>
+#include <fstream>
+#include<string>
+#include "eon_lee.h"
+#include "lower_bound.h"
 
-int main(int argc, char **argv)
-{
-    /* Fini = 64
-     * 
-     */
-    int fcur = 64, fini = 64, fsub = 0, ns = 0, nc = 0;
-    int quanttags = 100;
-    int quantslots = 64;
+using namespace std;
+using std::string;
+using std::to_string;
+
+int main() {
+
+    int protocolo = 1,
+        initags = 1,
+        incrementotags = 1,
+        maxtags = 1,
+        repeticoes = 1,
+        inislots = 1;
+    string protocolos[3] = {"Lower Bound", "Eom-Lee","Lower Bound e Eom-Lee"};
+    do {
+        if (protocolo < 1 || protocolo > 3) {
+            cout << "Digite um número válido.(1,2 ou 3)" << endl << endl;
+        }
+        cout << "Digite o protocolo que vai ser utilizado" << endl;
+        cout << "(1) " + protocolos[0] << endl;
+        cout << "(2) " + protocolos[1] << endl;
+        cout << "(3) " + protocolos[2] << endl;
+    } while (cin >> protocolo, (protocolo < 1 || protocolo > 3));
+
+    cout << "O protocolo selecionado foi " + protocolos[protocolo - 1] << "." << endl << endl;
+
+    do {
+        if (initags < 0) {
+            cout << "Digite uma quantidade válida de etiquetas.(maior ou igual a 0)" << endl;
+        }
+        cout << "Digite a quantidade inicial de etiquetas" << endl;
+    } while (cin >> initags, initags < 0);
+    cout << "A quantidade inicial de etiquetas é " << initags << "." << endl << endl;
+
+    do {
+        if (incrementotags < 1) {
+            cout << "Digite uma quantidade válida para o incremento de etiquetas.(maior que 0)" << endl; 
+        }
+        cout << "Digite a quantidade de etiquetas que vai ser incrementada a cada interação" << endl;
+    } while (cin >> incrementotags, incrementotags < 1);
+
+    cout << "A quantidade de etiquetas que vai ser incrementado a cada interação é " << incrementotags << "." << endl << endl;
+
+    do {
+        if (maxtags < initags) {
+            cout << "Digite uma quantidade maior ou igual a quantidade inicial de etiquetas. ( maior ou igual a " << initags << ")" << endl;
+        }
+        cout << "Digite a quantidade máxima de etiquetas que vai ser utilizada no teste" << endl;
+    } while (cin >> maxtags, maxtags < initags);
+
+    cout << "A quantidade máxima de etiquetas que vai ser utilizado no teste é " << maxtags << "." << endl << endl;
+
+    do {
+        if (repeticoes < 1) {
+            cout << "Digite uma quantidade válida para a quantiade de repetições do teste em cada quantidade de etiquetas. (maior ou igual a 1)" << endl; 
+        }
+        cout << "Digite a quantidade de repetições do teste em cada quantidade de etiquetas" << endl;
+    } while (cin >> repeticoes, repeticoes < 1);
+
+    cout << "A quantidade de repetições do teste em cada quantidade de etiquetas é " << repeticoes << "." << endl << endl;
+
+    do {
+        if (inislots < 1) {
+            cout << "Digite um número válida para o tamanho do quadro inicial.(maior ou igual a 1)" << endl; 
+        }
+        cout << "Digite o tamanho do quadro inicial" << endl;
+    } while (cin >> inislots, inislots < 1);
+
+    cout << "O tamanho do quadro inicial é " << inislots << "." << endl << endl;
+
+    cout << "Resumo:" << endl;
+    cout << "Protocolo selecionado: " + protocolos[protocolo - 1] << "," << endl;
+    cout << "Quantidade inicial de etiquetas: " << initags << "," << endl;
+    cout << "Quantidade de etiquetas que vai ser incrementado a cada interação: " << incrementotags << "," << endl;
+    cout << "Quantidade máxima de etiquetas que vai ser utilizado no teste: " << maxtags << "," << endl;
+    cout << "Quantidade de repetições do teste em cada quantidade de etiquetas: " << repeticoes << "," << endl;
+    cout << "Tamanho do quadro inicial: " << inislots << "." << endl << endl << endl;
+
+/*
+initags,
+incrementotags,
+maxtags,
+repeticoes,
+inislots;
+*/
+    int num = 2;
+    ofstream slots, slotsvazios, slotscolisao, tempo;
+    slots.open ("slots.dat");
+    slotsvazios.open ("slotsvazios.dat");
+    slotscolisao.open ("slotscolisao.dat");
+    tempo.open("tempo.dat");
+
+    if(protocolo == 1) {
+        vector<vector<double> > lb = lower_bound(
+            inislots,
+            initags,
+            incrementotags,
+            maxtags,
+            repeticoes
+        );
+
+        int tags = initags;
+        slots << "Etiquetas Lower-Bound\n";
+        slotsvazios << "Etiquetas Lower-Bound\n";
+        slotscolisao << "Etiquetas Lower-Bound\n";
+        tempo << "Etiquetas Lower-Bound\n";
+        for(int i = 0; i < lb.size(); i++) {
+            slots << tags << " " << lb[i][0] << "\n";
+            slotscolisao << tags << " " << lb[i][1] << "\n";
+            slotsvazios << tags << " " << lb[i][2] << "\n";
+            tempo << tags << " " << lb[i][3] << "\n";
+            tags += incrementotags;
+        }
+    } else if(protocolo == 2) {
+        vector<vector<double> > el = eonlee(
+            inislots,
+            initags,
+            incrementotags,
+            maxtags,
+            repeticoes
+        );
+
+        int tags = initags;
+        slots << "Etiquetas Eon-Lee\n";
+        slotsvazios << "Etiquetas Eon-Lee\n";
+        slotscolisao << "Etiquetas Eon-Lee\n";
+        tempo << "Etiquetas Eon-Lee\n";
+        for(int i = 0; i < el.size(); i++) {
+            slots << tags << " " << el[i][0] << "\n";
+            slotscolisao << tags << " " << el[i][1] << "\n";
+            slotsvazios << tags << " " << el[i][2] << "\n";
+            tempo << tags << " " << el[i][3] << "\n";
+            tags += incrementotags;
+        }
+    } else if (protocolo == 3) {
+        num = 3;
+        vector<vector<double> > lb = lower_bound(
+            inislots,
+            initags,
+            incrementotags,
+            maxtags,
+            repeticoes
+        );
+
+        vector<vector<double> > el = eonlee(
+            inislots,
+            initags,
+            incrementotags,
+            maxtags,
+            repeticoes
+        );
+
+        int tags = initags;
+        slots << "Etiquetas Lower-Bound Eon-Lee\n";
+        slotsvazios << "Etiquetas Lower-Bound Eon-Lee\n";
+        slotscolisao << "Etiquetas Lower-Bound Eon-Lee\n";
+        tempo << "Etiquetas Lower-Bound Eon-Lee\n";
+        for(int i = 0; i < el.size(); i++) {
+            slots << tags << " " << lb[i][0] << " " << el[i][0] << "\n";
+            slotscolisao << tags << " " << lb[i][1] << " " << el[i][1] << "\n";
+            slotsvazios << tags << " " << lb[i][2] << " " << el[i][2] << "\n";
+            tempo << tags << " " << lb[i][3] << " " << el[i][3] << "\n";
+            tags += incrementotags;
+        }
+    }
+
+    slots.close();
+    slotsvazios.close();
+    slotscolisao.close();
+    tempo.close();
+
+    // gerar graficos
+    string comando1 = "gnuplot -c run-gnuplot.gp slots.png slots.dat \"Número de Slots\" " + to_string(num);
+    string comando2 = "gnuplot -c run-gnuplot.gp slotsvazios.png slotsvazios.dat \"Número de Slots Vazios\" " + to_string(num);
+    string comando3 = "gnuplot -c run-gnuplot.gp slotscolisao.png slotscolisao.dat \"Número de Slots em Colisão\" " + to_string(num);
+    string comando4 = "gnuplot -c run-gnuplot.gp tempo.png tempo.dat \"Tempo de execução (ms)\" " + to_string(num);
     
-    while (quanttags > 0) {
-        int slots[quantslots],
-            sucesso = 0, // quantidade de slots que leram as etiquetas com sucesso
-            colisao = 0, // quantidade de slots que tiveram colisao
-            vazio = 0; // quantidade de slots vazios
+    system(comando1.c_str());
+    system(comando2.c_str());
+    system(comando3.c_str());
+    system(comando4.c_str());
 
-        for (int i = 0; i< quantslots;i++) {
-            slots[i] = 0; // coloca 0 em todos os slots
-        }
-
-        for (int i = 0; i < quanttags; i++) {
-            slots[rand() % quantslots] += 1; // gera um numero aleatorio entre 0 e a quantidade de slots e no slot do numero que foi gerado acrescenta um nele
-        }
-        
-        for (int i = 0; i< quantslots;i++) {
-            if (slots[i] == 0) {
-                vazio++; // pega a quantidade de slots vazios
-            } else if (slots[i] == 1) {
-                sucesso++; // pega a quantidade de slots que conseguiram reconhecer tags
-            } else {
-                colisao++; // pega a quantidade de slots que teve colisao
-            }
-        }
-    }
-	return 0;
+    return 0;
 }
-
-/*
- * 1. Initialize F cur = F ini , F sub , N s and N c , where F ini and F sub are initial full frame and sub-frame size, respectively
- * 2. while (quanttags > 0)
- * 3. for (int i = 0; i < quanttags; i++) {
-        slots[rand() % quantslots] += 1; // gera um numero aleatorio entre 0 e a quantidade de slots e no slot do numero que foi gerado acrescenta um nele
-    }
- * 4. calcular sucesso e coliso
- * 5. Find n̂ from MAP tables and compute N est according to Eq.9
-6. if F cur fits N est according to Table.I
-7. Compute N back from Eq.11&12, and adjust next frame size
-8 .Set K = 1 for the rest of the time
-9. else
-10. Compute N back from Eq.10 and adjust next frame size
-11. end if
-12. end while
- * 
- * 
- * incremento tags = 20
- * inicial tags = 6
-*/
-
-
-/*
- * F = Tamanho do frame, ex: 64 slots
- * ñ = Número estimado de tags no primeiro sub-frame
- * Fsub = Tamanho do sub-frame
- * Nest = Numero estimado de tags em todo o frame = ñ*K -> K = F/Fsub = quantidade de subframes
- * 
-*/
