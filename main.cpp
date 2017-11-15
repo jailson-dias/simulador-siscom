@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include<string>
-#include "eon_lee.h"
+#include "eom_lee.h"
 #include "lower_bound.h"
 
 using namespace std;
@@ -120,7 +120,7 @@ inislots;
             tags += incrementotags;
         }
     } else if(protocolo == 2) {
-        vector<vector<double> > el = eonlee(
+        vector<vector<double> > el = eomlee(
             inislots,
             initags,
             incrementotags,
@@ -129,11 +129,11 @@ inislots;
         );
 
         int tags = initags;
-        slots << "Etiquetas Eon-Lee\n";
-        slotsvazios << "Etiquetas Eon-Lee\n";
-        slotscolisao << "Etiquetas Eon-Lee\n";
-        tempo << "Etiquetas Eon-Lee\n";
-        fluxo << "Etiquetas Eon-Lee\n";
+        slots << "Etiquetas eom-Lee\n";
+        slotsvazios << "Etiquetas eom-Lee\n";
+        slotscolisao << "Etiquetas eom-Lee\n";
+        tempo << "Etiquetas eom-Lee\n";
+        fluxo << "Etiquetas eom-Lee\n";
         for(int i = 0; i < el.size(); i++) {
             slots << tags << " " << el[i][0] << "\n";
             slotscolisao << tags << " " << el[i][1] << "\n";
@@ -152,7 +152,7 @@ inislots;
             repeticoes
         );
 
-        vector<vector<double> > el = eonlee(
+        vector<vector<double> > el = eomlee(
             inislots,
             initags,
             incrementotags,
@@ -161,11 +161,11 @@ inislots;
         );
 
         int tags = initags;
-        slots << "Etiquetas Lower-Bound Eon-Lee\n";
-        slotsvazios << "Etiquetas Lower-Bound Eon-Lee\n";
-        slotscolisao << "Etiquetas Lower-Bound Eon-Lee\n";
-        tempo << "Etiquetas Lower-Bound Eon-Lee\n";
-        fluxo << "Etiquetas Lower-Bound Eon-Lee\n";
+        slots << "Etiquetas Lower-Bound eom-Lee\n";
+        slotsvazios << "Etiquetas Lower-Bound eom-Lee\n";
+        slotscolisao << "Etiquetas Lower-Bound eom-Lee\n";
+        tempo << "Etiquetas Lower-Bound eom-Lee\n";
+        fluxo << "Etiquetas Lower-Bound eom-Lee\n";
         for(int i = 0; i < el.size(); i++) {
             slots << tags << " " << lb[i][0] << " " << el[i][0] << "\n";
             slotscolisao << tags << " " << lb[i][1] << " " << el[i][1] << "\n";

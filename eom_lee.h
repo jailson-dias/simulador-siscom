@@ -11,7 +11,7 @@ using namespace std;
 using namespace std::chrono;
 
 double calcbk(int l, double ykm1, int sc, int ss) {
-    /** funcao para calcular o beta da interacao k no algoritmo de eon-lee
+    /** funcao para calcular o beta da interacao k no algoritmo de eom-lee
         
         paramentros
         l = quantidade de slots
@@ -24,14 +24,14 @@ double calcbk(int l, double ykm1, int sc, int ss) {
 }
 
 double calcyk(double bk) {
-    /** funcao utilizada para calcular o gama da interacao k no algoritmo de eon-lee
+    /** funcao utilizada para calcular o gama da interacao k no algoritmo de eom-lee
 
         paramentros
         bk = beta da interacao k - 1*/
     return (1 - pow(M_E, -1/bk))/(bk*(1-(1+1/bk)*pow(M_E, -1/bk)));
 }
 
-vector<vector<double> > eonlee(int inislots, // quantidade inicial de slots
+vector<vector<double> > eomlee(int inislots, // quantidade inicial de slots
     int initags, // quantidade inicial de tags
     int incrementotags, // tamanho do incremento na quantidade de tags
     int maximotags, // numero maximo de tags
@@ -39,7 +39,7 @@ vector<vector<double> > eonlee(int inislots, // quantidade inicial de slots
 ) {
     double inib1 = DBL_MAX, // valor inicial de beta
            iniy1 = 2, // valor inicial de gama
-           limiar = 0.001; // limiar de aproximacao para o estimador de eon-lee parar
+           limiar = 0.001; // limiar de aproximacao para o estimador de eom-lee parar
     
     int epoca = 1; // incremento de tags (100,200, ..., 1000)
    
@@ -60,6 +60,7 @@ vector<vector<double> > eonlee(int inislots, // quantidade inicial de slots
         while (execucao--) {
             int quantslots = inislots; // quantidade de slots na interacao atual
             while (quanttags > 0) {
+                somaslots += quantslots; // utilizado para saber a quantidade de slots sao utilizados em media para reconhecer as tags
                 int slots[quantslots],
                     sucesso = 0, // quantidade de slots que leram as etiquetas com sucesso
                     colisao = 0, // quantidade de slots que tiveram colisao
@@ -97,7 +98,6 @@ vector<vector<double> > eonlee(int inislots, // quantidade inicial de slots
                 quanttags -= sucesso;
                 slotscolisao += colisao;
                 slotsvazio += vazio;
-                somaslots += quantslots; // utilizado para saber a quantidade de slots sao utilizados em media para reconhecer as tags
                 slotssucesso += sucesso;
             }
             quanttags=initags*epoca; // reinicia a variavel quanttags com a quantidade de tags da epoca que ela esta (10)
@@ -111,17 +111,4 @@ vector<vector<double> > eonlee(int inislots, // quantidade inicial de slots
     }
     
     return retorno;
-}
-
-int main() {
-    vector<vector<double> > eon = eonlee(64, 100, 100, 1000, 500);
-
-    for (int i = 0;i< eon.size();i++) {
-        cout << "Interação " << i + 1 << endl;
-        cout << "Total slots: " << eon[i][0] << endl;
-        cout << "Slots com colisão: " << eon[i][1] << endl;
-        cout << "Slots vazios: " << eon[i][2] << endl << endl;
-        cout << "Tempo: " << eon[i][3] << endl;
-        cout << "Fluxo: " << eon[i][4] << endl << endl;
-    }
 }
