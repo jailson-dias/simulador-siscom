@@ -26,6 +26,7 @@ vector<vector<double> > lower_bound(int inislots, // quantidade inicial de slots
         int somaslots = inislots;
         int slotscolisao = 0;
         int slotsvazio = 0;
+        int slotssucesso = 0;
 
         t1 = high_resolution_clock::now();
         while (execucao--) {
@@ -57,12 +58,13 @@ vector<vector<double> > lower_bound(int inislots, // quantidade inicial de slots
                 quanttags -= sucesso;
                 slotscolisao += colisao;
                 slotsvazio += vazio;
+                slotssucesso += sucesso;
             }
             quanttags=initags*epoca; // reinicia a variavel quanttags com a quantidade de tags da epoca que ela esta (10)
         }
         t2 = high_resolution_clock::now();
         time_span = t2 - t1;
-        vector<double> medias = {(double)somaslots/quantsimulacoes,(double)slotscolisao/quantsimulacoes,(double)slotsvazio/quantsimulacoes,(double)time_span.count()};
+        vector<double> medias = {(double)somaslots/quantsimulacoes,(double)slotscolisao/quantsimulacoes,(double)slotsvazio/quantsimulacoes,(double)time_span.count(), (double)slotssucesso/somaslots};
         retorno.push_back(medias);
         epoca++;
         quanttags+=initags;

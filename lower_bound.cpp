@@ -26,6 +26,7 @@ vector<vector<double> > lower_bound(int inislots, // quantidade inicial de slots
         int somaslots = inislots;
         int slotscolisao = 0;
         int slotsvazio = 0;
+        int slotssucesso = 0;
 
         t1 = high_resolution_clock::now();
         while (execucao--) {
@@ -57,12 +58,13 @@ vector<vector<double> > lower_bound(int inislots, // quantidade inicial de slots
                 slotscolisao += colisao;
                 slotsvazio += vazio;
                 somaslots += quantslots; // utilizado para saber a quantidade de slots sao utilizados em media para reconhecer as tags
+                slotssucesso += sucesso;
             }
             quanttags=initags*epoca; // reinicia a variavel quanttags com a quantidade de tags da epoca que ela esta (10)
         }
         t2 = high_resolution_clock::now();
         time_span = t2 - t1;
-        vector<double> medias = {(double)somaslots/quantsimulacoes,(double)slotscolisao/quantsimulacoes,(double)slotsvazio/quantsimulacoes,(double)time_span.count()};
+        vector<double> medias = {(double)somaslots/quantsimulacoes,(double)slotscolisao/quantsimulacoes,(double)slotsvazio/quantsimulacoes,(double)time_span.count(), (double)slotssucesso/somaslots};
         retorno.push_back(medias);
         epoca++;
         quanttags+=initags;
@@ -79,7 +81,8 @@ int main() {
         cout << "Total slots: " << retorno[i][0] << endl;
         cout << "Slots com colisão: " << retorno[i][1] << endl;
         cout << "Slots vazios: " << retorno[i][2] << endl;
-        cout << "Tempo: " << retorno[i][3] << endl << endl;
+        cout << "Tempo: " << retorno[i][3] << endl;
+        cout << "Fluxo: " << retorno[i][4] << endl << endl;
     }
 
     return 0;
