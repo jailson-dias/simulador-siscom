@@ -6,6 +6,17 @@
 #include <vector> 
 #include <algorithm>    // std::copy
 #include <chrono> // utilizado para contar o tempo de execucao
+#include<fstream>
+#include <sstream>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#include<iostream>
+#include<algorithm>
+#include<fstream>
+#include<chrono>
+
 
 using namespace std;
 using namespace std::chrono;
@@ -286,16 +297,58 @@ vector<vector<double> > dsmap(int inislots, // quantidade inicial de slots
 
 
 
+vector<vector<vector<int>>>  load_table(){
+
+    ifstream f;
+    f.open("max300_editado.txt");
+
+    vector<vector<vector<int>>> tabela2;
+    vector<int> linha;
+    vector<vector<int>> tabela;
+
+    string s0;
+    int length = 4;
+    int t = 0;
+    int length_atual = 4;
+        cout << " oi: " << endl;
+    while(!f.eof()) {
+        string s;
+        getline(f,s);
+        if(!s.empty())
+        {
+            stringstream ss;
+            ss << s;
+            int valor;
+            cout << " line" << s  << endl;           
+            for(int i = 0; i < length; i++){
+                for(int j = 0; j < length_atual; j++){
+                    ss >> valor;                    
+                    linha.push_back(valor);
+                } 
+                s = ""; 
+                ss.clear();
+                getline(f,s);
+                ss << s;
+                length_atual--; 
+                tabela.push_back(linha);  
+                linha.clear();                    
+            }
+            t++;
+            length *= 2;
+            length_atual = length;
+            tabela2.push_back(tabela);
+            tabela.clear();
+        }
+    }
+
+    return tabela2;
+
+}
+
+
 
 int main() {
-    vector<vector<double> > ds = dsmap(64, 100, 100, 1000, 500);
+    //vector<vector<double> > ds = dsmap(64, 100, 100, 1000, 500);
 
-    for (int i = 0;i< ds.size();i++) {
-        cout << "Interação " << i + 1 << endl;
-        cout << "Total slots: " << ds[i][0] << endl;
-        cout << "Slots com colisão: " << ds[i][1] << endl;
-        cout << "Slots vazios: " << ds[i][2] << endl << endl;
-        cout << "Tempo: " << ds[i][3] << endl;
-        cout << "Fluxo: " << ds[i][4] << endl << endl;
-    }
+   load_table();
 }
